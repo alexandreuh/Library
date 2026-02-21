@@ -1,0 +1,32 @@
+class Library:
+    def __init__(self, name):
+        self.name = name
+        self.books = []
+        self.members = []
+
+    def add_book(self, book):
+        self.books.append(book)
+
+    def add_member(self, member):
+        self.members.append(member)
+
+    def borrow_book(self, member_id, book_id):
+        # Trouver le membre
+        member = None
+        for m in self.members:
+            if m.member_id == member_id:
+                member = m
+                break
+
+        # Trouver le livre
+        book = None
+        for b in self.books:
+            if b.id == book_id and b.status == "available":
+                book = b
+                break
+
+        if member and book and len(member.borrowed_books) < 3:
+            book.status = "borrowed"
+            member.borrowed_books.append(book)
+            return True
+        return False
