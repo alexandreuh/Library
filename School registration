@@ -1,0 +1,119 @@
+class Student:
+    def __init__(self, name, id, email, major):
+        self.name = name
+        self.id = id
+        self.email = email
+        self.major = major
+        self.enrolled_courses = []
+        self.completed_courses = []
+
+    def calculate_gpa(self):
+        if not self.completed_courses:
+            return 0
+        total = 0
+        for course, grade in self.completed_courses:
+            if grade == 'A':
+                total += 4
+            elif grade == 'B':
+                total += 3
+            elif grade == 'C':
+                total += 2
+            elif grade == 'D':
+                total += 1
+        return total / len(self.completed_courses)
+
+    def register_course(self, course):
+        if len(self.enrolled_courses) < 5:
+            self.enrolled_courses.append(course)
+            return True
+        return False
+
+
+class Course:
+    def __init__(self, code, name, credits, capacity=30):
+        self.code = code
+        self.name = name
+        self.credits = credits
+        self.capacity = capacity
+        self.enrolled_students = []
+        self.prerequisites = []
+
+    def add_prerequisite(self, course_code):
+        self.prerequisites.append(course_code)
+
+    def is_full(self):
+        return len(self.enrolled_students) >= self.capacity
+
+
+class RegistrationSystem:
+    def __init__(self):
+        self.students = []
+        self.courses = []
+
+    def add_student(self, student):
+        self.students.append(student)
+        print(f"Étudiant {student.name} ajouté")
+
+    def add_course(self, course):
+        self.courses.append(course)
+        print(f"Cours {course.name} ajouté")
+
+    def register_student(self, student_id, course_code):
+
+        student = None
+        for s in self.students:
+            if s.id == student_id:
+                student = s
+                break
+
+        course = None
+        for c in self.courses:
+            if c.code == course_code:
+                course = c
+                break
+
+        if student and course:
+            if student.register_course(course):
+                course.enrolled_students.append(student)
+                print(f"{student.name} inscrit à {course.name}")
+                return True
+            else:
+                print("Inscription échouée")
+                return False
+
+    def show_student_courses(self, student_id):
+        for s in self.students:
+            if s.id == student_id:
+                print(f"Cours de {s.name}:")
+                for c in s.enrolled_courses:
+                    print(f"  - {c.name}")
+                return
+
+
+# TEST
+print("🎓 Système d'inscription démarré\n")
+
+# L'étudiants
+s1 = Student("Alice", "S001", "alice@email.com", "Informatique")
+s2 = Student("Bob", "S002", "bob@email.com", "Maths")
+
+# Création des cours
+c1 = Course("CS101", "Python", 3)
+c2 = Course("CS102", "Java", 3)
+c3 = Course("CS201", "Algorithmes", 4)
+
+# Création du système
+system = RegistrationSystem()
+system.add_student(s1)
+system.add_student(s2)
+system.add_course(c1)
+system.add_course(c2)
+system.add_course(c3)
+
+print("\n📝 Inscriptions:")
+system.register_student("S001", "CS101")
+system.register_student("S001", "CS102")
+system.register_student("S002", "CS101")
+
+print("\n📚 Résultat:")
+system.show_student_courses("S001")
