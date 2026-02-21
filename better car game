@@ -1,0 +1,36 @@
+state = {"start": False, "stop": False}  # état pour start/stop
+count = {"start": 0, "stop": 0}         # compteur pour start/stop
+
+while True:
+    command = input("> ").lower()
+
+    if command in ["start", "stop"]:
+        # la commande oppose le booléen de l'autre
+        opposite = "stop" if command == "start" else "start"
+
+        if not state[command]:
+            state[command] = True
+            state[opposite] = False  # mettre l'autre à False
+            count[command] = 1
+            count[opposite] = 0
+            print(f"Car {command}ed.")  # start → started, stop → stopped
+        else:
+            count[command] += 1
+            if count[command] == 2:
+                print(f"The car is already {command}ed.")
+            else:
+                print(
+                    f"DAMN THE GODDAMN CAR ISbei ALREADY {command.upper()}ED")
+
+    elif command == "quit":
+        print("Bye!")
+        break
+    elif command == "help":
+        print("""
+start - start the car
+stop - stop the car  
+quit - if you wanna quit the game                            
+              """)
+
+    else:
+        print("I don't understand.")
